@@ -4,7 +4,7 @@ import time
 
 async def sleep1():
     print(f'Time: {time.time() - start:.2f}')
-    time.sleep(1)
+    await asyncio.sleep(1)
 
 
 async def sum1(name, numbers):
