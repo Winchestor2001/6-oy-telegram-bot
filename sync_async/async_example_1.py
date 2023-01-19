@@ -15,7 +15,6 @@ async def sum1(name, numbers):
         total += number
     print(f'Task {name}: Sum = {total}\n')
 
-
 start = time.time()
 
 loop = asyncio.get_event_loop()
