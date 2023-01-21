@@ -11,15 +11,16 @@ import requests
 # print(type(r.text))
 
 
-token = '5674925771:AAE-McW8QREcJ90gSsv2ivWPZEPDr2oEbEM'
-my_id = 591250245
-get_me = requests.get(f'https://api.telegram.org/bot{token}/getMe')
-get_updates = requests.get(f'https://api.telegram.org/bot{token}/getUpdates')
-post_message = requests.post(
-    f'https://api.telegram.org/bot{token}/sendMessage',
-    data={'chat_id': my_id, 'text': 'Salom'}
-)
-print(post_message)
+# token = '5674925771:AAE-McW8QREcJ90gSsv2ivWPZEPDr2oEbEM'
+token = '5627560688:AAFqfDPBDxwvW1PuF8Frr5XtL47FoNRRjL8'
+my_id = 671053760
+# get_me = requests.get(f'https://api.telegram.org/bot{token}/getMe')
+# get_updates = requests.get(f'https://api.telegram.org/bot{token}/getUpdates')
+# post_message = requests.post(
+#     f'https://api.telegram.org/bot{token}/sendMessage',
+#     data={'chat_id': my_id, 'text': 'Salom'}
+# )
+# pprint(post_message.json())
 # print(get_me.status_code)
 # print(get_updates.status_code)
 # pprint(get_me.json())
