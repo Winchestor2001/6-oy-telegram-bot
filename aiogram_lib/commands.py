@@ -1,5 +1,6 @@
 import logging
 from aiogram import Dispatcher, Bot, executor, types
+from random import choice
 
 logging.basicConfig(level=logging.INFO)
 
@@ -41,6 +42,18 @@ async def counter_handler(message: types.Message):
     global count
     await message.answer(f"Click: {count}")
     count += 1
+
+
+@dp.message_handler(commands=['sticker'])
+async def sticker_handler(message: types.Message):
+    await message.reply_sticker('CAACAgIAAxkBAAEHc9Nj0kthyNZl4VnXEUdtMt9MPgIw6wACbhIAArzW1AShMO-Heha9QS0E')
+    await message.reply_sticker('CAACAgIAAxkBAAEHc9Vj0ktpZ661Pwp-qBFZnbag3YmAsAACNBMAAjGSoEvT_Q2YdUoyGS0E')
+
+
+@dp.message_handler(commands=['emoji'])
+async def emoji_handler(message: types.Message):
+    emojies = ['😇', '🥸', '🤯', '🥶', '🤑']
+    await message.answer(f"Siz {choice(emojies)}")
 
 
 if __name__ == '__main__':
