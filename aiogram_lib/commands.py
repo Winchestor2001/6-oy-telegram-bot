@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from aiogram import Dispatcher, Bot, executor, types
 from random import choice
@@ -54,6 +55,9 @@ async def sticker_handler(message: types.Message):
 async def emoji_handler(message: types.Message):
     emojies = ['😇', '🥸', '🤯', '🥶', '🤑']
     await message.answer(f"Siz {choice(emojies)}")
+    # await message.delete()
+    await asyncio.sleep(5)
+    await bot.delete_message(message.chat.id, message.message_id+1)
 
 
 if __name__ == '__main__':
