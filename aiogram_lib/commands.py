@@ -33,7 +33,8 @@ async def help_bot(message: types.Message):
     /start = Botni ishga tushurish\n
     /count = Commandani ishlatilgan soni\n
     /sticker = Sticker jo'natish\n
-    /emoji = Emoji jo'natish
+    /emoji = Emoji jo'natish\n
+    /uzb = Uzb bayrog'i
             """
     await message.answer(context)
 
@@ -58,6 +59,20 @@ async def emoji_handler(message: types.Message):
     # await message.delete()
     await asyncio.sleep(5)
     await bot.delete_message(message.chat.id, message.message_id+1)
+
+
+@dp.message_handler(commands=['uzb'])
+async def uzbekcha_handler(message: types.Message):
+    context = f'Uzbekistan\n' \
+              f'<b>Uzbekistan</b>\n' \
+              f'<em>Uzbekistan</em>\n' \
+              f'<u>Uzbekistan</u>\n' \
+              f'<s>Uzbekistan</s>\n' \
+              f'<tg-spoiler>Uzbekistan</tg-spoiler>\n' \
+              f'<a href="https://youtu.be/vQVwkyn3-F8">Uzbekistan</a>\n' \
+              f'<code>Uzbekistan</code>\n' \
+              f'<pre>Uzbekistan</pre>'
+    await message.answer_photo(photo='https://www.advantour.com/img/uzbekistan/symbolics/uzbekistan-flag.jpg', caption=context, parse_mode=types.ParseMode.HTML)
 
 
 if __name__ == '__main__':
