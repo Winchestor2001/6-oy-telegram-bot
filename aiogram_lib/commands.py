@@ -7,7 +7,7 @@ logging.basicConfig(level=logging.INFO)
 
 BOT_TOKEN = '5674925771:AAE-McW8QREcJ90gSsv2ivWPZEPDr2oEbEM'
 
-bot = Bot(token=BOT_TOKEN)
+bot = Bot(token=BOT_TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot)
 count = 1
 
@@ -52,13 +52,16 @@ async def sticker_handler(message: types.Message):
     await message.reply_sticker('CAACAgIAAxkBAAEHc9Vj0ktpZ661Pwp-qBFZnbag3YmAsAACNBMAAjGSoEvT_Q2YdUoyGS0E')
 
 
-@dp.message_handler(commands=['emoji'])
+@dp.message_handler(content_types=['text'])
 async def emoji_handler(message: types.Message):
-    emojies = ['😇', '🥸', '🤯', '🥶', '🤑']
-    await message.answer(f"Siz {choice(emojies)}")
-    # await message.delete()
-    await asyncio.sleep(5)
-    await bot.delete_message(message.chat.id, message.message_id+1)
+    if message.text == 'emoji':
+        emojies = ['😇', '🥸', '🤯', '🥶', '🤑']
+        await message.answer(f"Siz {choice(emojies)}")
+        # await message.delete()
+        await asyncio.sleep(5)
+        await bot.delete_message(message.chat.id, message.message_id+1)
+    else:
+        await message.reply("Sizni tushunmadim!")
 
 
 @dp.message_handler(commands=['uzb'])
@@ -72,7 +75,8 @@ async def uzbekcha_handler(message: types.Message):
               f'<a href="https://youtu.be/vQVwkyn3-F8">Uzbekistan</a>\n' \
               f'<code>Uzbekistan</code>\n' \
               f'<pre>Uzbekistan</pre>'
-    await message.answer_photo(photo='https://www.advantour.com/img/uzbekistan/symbolics/uzbekistan-flag.jpg', caption=context, parse_mode=types.ParseMode.HTML)
+    await message.answer_photo(photo='https://www.advantour.com/img/uzbekistan/symbolics/uzbekistan-flag.jpg', caption=context)
+
 
 
 if __name__ == '__main__':
