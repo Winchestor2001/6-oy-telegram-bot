@@ -37,5 +37,29 @@ async def start_bot(message: types.Message):
     await message.answer("Assalomu aleykum", reply_markup=start_menu_btn)
 
 
+@dp.message_handler(content_types=['text'])
+async def any_btn_texts(message: types.Message):
+    text = message.text
+    if text == '📍 Location':
+        await message.answer_location(latitude=41, longitude=64)
+        # await bot.send_location()
+    elif text == '📚 Quiz':
+        await message.answer_poll(
+            question="Sizda gaz bormi?",
+            options=['Xa', 'Yoq', 'Surish kere'],
+            type='quiz',
+            correct_option_id=2,
+            open_period=10,
+            explanation="Xaaaa qovunjon!"
+        )
+        # await bot.send_poll()
+    elif text == '❤️‍🔥 emoji':
+        pass
+    elif text == '🎉 sticker':
+        pass
+    else:
+        await message.answer("Nima devosiz!")
+
+
 if __name__ == '__main__':
     executor.start_polling(dp, on_startup=set_commands, skip_updates=True)
