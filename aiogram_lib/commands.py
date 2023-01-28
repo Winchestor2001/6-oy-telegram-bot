@@ -59,7 +59,7 @@ async def emoji_handler(message: types.Message):
         await message.answer(f"Siz {choice(emojies)}")
         # await message.delete()
         await asyncio.sleep(5)
-        await bot.delete_message(message.chat.id, message.message_id+1)
+        await bot.delete_message(message.chat.id, message.message_id + 1)
     else:
         await message.reply("Sizni tushunmadim!")
 
@@ -75,8 +75,8 @@ async def uzbekcha_handler(message: types.Message):
               f'<a href="https://youtu.be/vQVwkyn3-F8">Uzbekistan</a>\n' \
               f'<code>Uzbekistan</code>\n' \
               f'<pre>Uzbekistan</pre>'
-    await message.answer_photo(photo='https://www.advantour.com/img/uzbekistan/symbolics/uzbekistan-flag.jpg', caption=context)
-
+    await message.answer_photo(photo='https://www.advantour.com/img/uzbekistan/symbolics/uzbekistan-flag.jpg',
+                               caption=context)
 
 
 if __name__ == '__main__':
