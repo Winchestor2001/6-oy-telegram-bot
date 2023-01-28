@@ -9,6 +9,19 @@ BOT_TOKEN = '5674925771:AAE-McW8QREcJ90gSsv2ivWPZEPDr2oEbEM'
 bot = Bot(token=BOT_TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot)
 
+# start_menu_btn = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False, row_width=2)
+# start_menu_btn.add(
+#     types.KeyboardButton(text='Location'),
+#     types.KeyboardButton(text='Quiz'),
+#     types.KeyboardButton(text='emoji'),
+#     types.KeyboardButton(text='sticker'),
+# )
+
+start_menu_btn = types.ReplyKeyboardMarkup(resize_keyboard=True)
+start_menu_btn.row('📍 Location')
+start_menu_btn.row('📚 Quiz', '❤️‍🔥 emoji')
+start_menu_btn.row('🎉 sticker')
+
 
 async def set_commands(dp: Dispatcher):
     await dp.bot.set_my_commands(
@@ -21,7 +34,7 @@ async def set_commands(dp: Dispatcher):
 
 @dp.message_handler(commands=['start'])
 async def start_bot(message: types.Message):
-    await message.answer("Salom")
+    await message.answer("Assalomu aleykum", reply_markup=start_menu_btn)
 
 
 if __name__ == '__main__':
