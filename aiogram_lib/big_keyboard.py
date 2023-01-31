@@ -1,4 +1,5 @@
 import asyncio
+from random import randint
 import logging
 from aiogram import Dispatcher, Bot, executor, types
 
@@ -46,6 +47,8 @@ async def any_btn_handler(message: types.Message):
         await message.answer("Biz Nits Python guruximiz!", reply_markup=about_btn)
 
     elif text == 'Contact':
+        name = message.from_user.first_name
+        t = f"<b>{name}</b>"
         await message.answer("Biz bilan zudlikbilan bog'laning!", reply_markup=contact_btn)
 
     elif text == 'Ortga':
@@ -55,6 +58,16 @@ async def any_btn_handler(message: types.Message):
     elif text == 'Video konsultatsiya':
         video = types.InputFile('video.mp4')
         await message.answer_video(video, width=400, height=60)
+
+    elif text == 'Location':
+        lat = randint(10, 100)
+        lon = randint(30, 60)
+        await message.answer_location(latitude=lat, longitude=lon)
+
+    elif text == 'Telefon raqamlar':
+        await message.answer_contact(phone_number='+998913451175', first_name="Bexruz")
+        await message.answer_contact(phone_number='+998995354994', first_name="Odiljon")
+        await message.answer_contact(phone_number='+998931333839', first_name="Ozodbek")
 
 
 if __name__ == '__main__':
