@@ -31,6 +31,8 @@ async def send_medies_handler(message: types.Message):
     media.attach_photo(types.InputFile('img/10. Цветы.jpg'))
     media.attach_video(types.InputFile('video/video.mp4'))
     await message.answer_chat_action('upload_photo')
+    # actions: upload_photo, upload_video, upload_audio, record_voice, typing, record_video,
+    # upload_voice, upload_document, find_location, choose_sticker
     # media.attach_photo(types.InputFile('img/16. Город.jpg'))
     # media.attach_photo(types.InputFile('img/9. Пустыня.jpg'))
 
