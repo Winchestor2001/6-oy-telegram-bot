@@ -56,7 +56,7 @@ async def any_btn_handler(message: types.Message):
         await message.answer("Assalomu aleykum", reply_markup=start_menu_btn)
 
     elif text == 'Video konsultatsiya':
-        video = types.InputFile('video.mp4')
+        video = types.InputFile('video/video.mp4')
         await message.answer_video(video, width=400, height=60)
 
     elif text == 'Location':
