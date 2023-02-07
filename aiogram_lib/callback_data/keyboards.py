@@ -25,6 +25,10 @@ menu_btn = ReplyKeyboardMarkup(resize_keyboard=True)
 menu_btn.row("Ishchilar", "Maxsulotlar")
 
 
+back_btn = InlineKeyboardMarkup()
+back_btn.add(InlineKeyboardButton(text="Ortga", callback_data="back_ishchilar"))
+
+
 async def ishchilar_btn(data):
     btn = InlineKeyboardMarkup(row_width=1)
     for ishchi in data:

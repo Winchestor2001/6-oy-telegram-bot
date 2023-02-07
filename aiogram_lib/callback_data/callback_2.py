@@ -1,6 +1,6 @@
 from aiogram import Dispatcher, Bot, executor, types
 import logging
-from keyboards import menu_btn, ishchilar_btn
+from keyboards import menu_btn, ishchilar_btn, back_btn
 
 logging.basicConfig(level=logging.INFO)
 
@@ -65,7 +65,15 @@ async def ishchi_callback(callback: types.CallbackQuery):
     for i in ishchilar:
         if i['id'] == ishchi_id:
             print(i['name'], i['lavozim'])
+            await callback.message.edit_text(f"Ismi: {i['name']}\n"
+                                             f"Lavozimi: {i['lavozim']}", reply_markup=back_btn)
             break
+
+
+@dp.callback_query_handler(text='back_ishchilar')
+async def back_ishchilar_callback(callback: types.CallbackQuery):
+    btn = await ishchilar_btn(ishchilar)
+    await callback.message.edit_text("Ishchilar:", reply_markup=btn)
 
 
 @dp.message_handler(text='Maxsulotlar')
