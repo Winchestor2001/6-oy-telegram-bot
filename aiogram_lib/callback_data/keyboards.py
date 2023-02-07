@@ -1,4 +1,4 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 
 
 start_btn = InlineKeyboardMarkup()
@@ -20,5 +20,18 @@ plus_mines_btn.add(
     InlineKeyboardButton(text="-", callback_data="mines"),
 )
 
+
+menu_btn = ReplyKeyboardMarkup(resize_keyboard=True)
+menu_btn.row("Ishchilar", "Maxsulotlar")
+
+
+async def ishchilar_btn(data):
+    btn = InlineKeyboardMarkup(row_width=1)
+    for ishchi in data:
+        btn.add(
+            InlineKeyboardButton(text=f"{ishchi['name']}", callback_data=f"ishchi_{ishchi['id']}")
+        )
+
+    return btn
 
 
