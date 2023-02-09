@@ -24,3 +24,14 @@ class Database:
             users = self.cur.execute("SELECT * FROM users").fetchall()
             return users
 
+    def update_user_lang(self, user_id, lang):
+        with self.con:
+            self.cur.execute("UPDATE users SET language = ? WHERE user_id = ?", (lang, user_id))
+
+    def get_user_info(self, user_id):
+        with self.con:
+            user = self.cur.execute("SELECT * FROM users WHERE user_id = ?", (user_id,)).fetchone()
+            return user
+
+
+
