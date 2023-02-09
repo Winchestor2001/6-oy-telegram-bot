@@ -9,13 +9,18 @@ class Database:
     def create_tables(self):
         with self.con:
             self.cur.execute("""CREATE TABLE IF NOT EXISTS users(
-                            user_id INT,
+                            user_id INT PRIMARY KEY,
                             username TEXT,
                             language TEXT DEFAULT 'uz')""")
 
     def add_user(self, user_id, username):
         with self.con:
-            self.cur.execute(
-                "INSERT INTO users (user_id, username) VALUES (?, ?)", (user_id, username))
+            if not self.cur.execute("SELECT * FROM users WHERE user_id = ?", (user_id,)).fetchone():
+                self.cur.execute(
+                    "INSERT INTO users (user_id, username) VALUES (?, ?)", (user_id, username))
 
+    def get_all_users(self):
+        with self.con:
+            users = self.cur.execute("SELECT * FROM users").fetchall()
+            return users
 

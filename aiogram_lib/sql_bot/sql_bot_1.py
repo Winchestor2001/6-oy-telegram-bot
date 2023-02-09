@@ -29,5 +29,17 @@ async def send_welcome(message: types.Message):
     await message.answer("Assalomu aleykum")
 
 
+@dp.message_handler(commands=['users'])
+async def show_all_users_handler(message: types.Message):
+    users = db.get_all_users()
+    context = f'Userlar soni: {len(users)}\n\n' \
+              f'Userlar:\n'
+
+    for n, user in enumerate(users, start=1):
+        context += f"{n}) {user[1]}\n"
+
+    await message.answer(context)
+
+
 if __name__ == '__main__':
     executor.start_polling(dp, on_startup=set_commands)
