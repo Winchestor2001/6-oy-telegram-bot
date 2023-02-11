@@ -19,13 +19,21 @@ menu_btn.add(
 
 langs_btn = types.InlineKeyboardMarkup(row_width=2)
 langs_btn.add(
-    types.InlineKeyboardButton("🇷🇺", callback_data="ru"),
-    types.InlineKeyboardButton("🇺🇿", callback_data="uz")
+    types.InlineKeyboardButton("🇷🇺", callback_data="lang:ru"),
+    types.InlineKeyboardButton("🇺🇿", callback_data="lang:uz")
 )
 
 messages = {
-    'uz': {'start_text': 'Assalomu aleykum', 'select_lang': 'Tilni tanlang'},
-    'ru': {'start_text': 'Привет, как ты', 'select_lang': 'Выберите язык'},
+    'uz': {
+        'start_text': 'Assalomu aleykum', 'select_lang': 'Tilni tanlang',
+        'user_count': 'Foydalanuvchilar soni', 'users_list': 'Foydalanuvchilar',
+        'lang_changed': 'Til o`zgardi',
+    },
+    'ru': {
+        'start_text': 'Привет, как ты', 'select_lang': 'Выберите язык',
+        'user_count': 'Число пользователи', 'users_list': 'Пользователи',
+        'lang_changed': 'Язык изменен',
+    },
 }
 
 
@@ -51,8 +59,9 @@ async def send_welcome(message: types.Message):
 @dp.message_handler(commands=['users'])
 async def show_all_users_handler(message: types.Message):
     users = db.get_all_users()
-    context = f'Userlar soni: {len(users)}\n\n' \
-              f'Userlar:\n'
+    user_lang = db.get_user_info(message.from_user.id)
+    context = f'{messages[user_lang[2]]["user_count"]}: {len(users)}\n\n' \
+              f'{messages[user_lang[2]]["users_list"]}:\n'
 
     for n, user in enumerate(users, start=1):
         context += f"{n}) {user[1]}\n"
@@ -66,18 +75,13 @@ async def change_lang_handler(message: types.Message):
     await message.answer(messages[user_lang[2]]['select_lang'], reply_markup=langs_btn)
 
 
-@dp.callback_query_handler(text='uz')
+@dp.callback_query_handler(text_contains='lang:')
 async def selected_uz_callback(callback: types.CallbackQuery):
     user_id = callback.from_user.id
-    db.update_user_lang(user_id=user_id, lang='uz')
-    await callback.answer("Til o'zgardi", show_alert=True)
+    lang = callback.data.split(':')[-1]
+    db.update_user_lang(user_id=user_id, lang=lang)
 
-
-@dp.callback_query_handler(text='ru')
-async def selected_ru_callback(callback: types.CallbackQuery):
-    user_id = callback.from_user.id
-    db.update_user_lang(user_id=user_id, lang='ru')
-    await callback.answer("Til o'zgardi", show_alert=True)
+    await callback.answer(f"{messages[lang]['lang_changed']}", show_alert=True)
 
 
 if __name__ == '__main__':
