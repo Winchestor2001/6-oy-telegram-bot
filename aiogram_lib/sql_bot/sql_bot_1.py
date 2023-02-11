@@ -1,6 +1,7 @@
 from aiogram import Dispatcher, Bot, executor, types
 import logging
 from database import Database
+from keyboards import menu_btn, select_lang_btn
 
 logging.basicConfig(level=logging.INFO)
 
@@ -12,27 +13,16 @@ db = Database()
 
 db.create_tables()
 
-menu_btn = types.ReplyKeyboardMarkup(resize_keyboard=True)
-menu_btn.add(
-    types.KeyboardButton("Tilni o'zgartirish")
-)
-
-langs_btn = types.InlineKeyboardMarkup(row_width=2)
-langs_btn.add(
-    types.InlineKeyboardButton("🇷🇺", callback_data="lang:ru"),
-    types.InlineKeyboardButton("🇺🇿", callback_data="lang:uz")
-)
-
 messages = {
     'uz': {
         'start_text': 'Assalomu aleykum', 'select_lang': 'Tilni tanlang',
         'user_count': 'Foydalanuvchilar soni', 'users_list': 'Foydalanuvchilar',
-        'lang_changed': 'Til o`zgardi',
+        'lang_changed': 'Til o`zgardi', 'select_lang_btn': 'Tilni o`zgartirish',
     },
     'ru': {
         'start_text': 'Привет, как ты', 'select_lang': 'Выберите язык',
         'user_count': 'Число пользователи', 'users_list': 'Пользователи',
-        'lang_changed': 'Язык изменен',
+        'lang_changed': 'Язык изменен', 'select_lang_btn': 'Изменить язык',
     },
 }
 
@@ -52,8 +42,9 @@ async def send_welcome(message: types.Message):
     db.add_user(user_id=user_id, username=username)
 
     user_lang = db.get_user_info(user_id)
+    btn = await menu_btn(messages[user_lang[2]]['select_lang_btn'])
 
-    await message.answer(messages[user_lang[2]]['start_text'], reply_markup=menu_btn)
+    await message.answer(messages[user_lang[2]]['start_text'], reply_markup=btn)
 
 
 @dp.message_handler(commands=['users'])
@@ -69,10 +60,12 @@ async def show_all_users_handler(message: types.Message):
     await message.answer(context)
 
 
-@dp.message_handler(text="Tilni o'zgartirish")
+@dp.message_handler(text="Tilni o`zgartirish")
+@dp.message_handler(text="Изменить язык")
 async def change_lang_handler(message: types.Message):
     user_lang = db.get_user_info(message.from_user.id)
-    await message.answer(messages[user_lang[2]]['select_lang'], reply_markup=langs_btn)
+    btn = await select_lang_btn()
+    await message.answer(messages[user_lang[2]]['select_lang'], reply_markup=btn)
 
 
 @dp.callback_query_handler(text_contains='lang:')
