@@ -33,5 +33,7 @@ class Database:
             user = self.cur.execute("SELECT * FROM users WHERE user_id = ?", (user_id,)).fetchone()
             return user
 
-
+    def delete_user(self, user_id):
+        with self.con:
+            self.cur.execute("DELETE FROM users WHERE user_id = ?", (user_id,))
 

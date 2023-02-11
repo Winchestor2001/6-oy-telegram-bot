@@ -1,7 +1,7 @@
 from aiogram import Dispatcher, Bot, executor, types
 import logging
 from database import Database
-from keyboards import menu_btn, select_lang_btn
+from keyboards import menu_btn, select_lang_btn, show_users_btn, user_info_btn
 
 logging.basicConfig(level=logging.INFO)
 
@@ -48,7 +48,7 @@ async def send_welcome(message: types.Message):
 
 
 @dp.message_handler(commands=['users'])
-async def show_all_users_handler(message: types.Message):
+async def show_all_users_handler(message: types.Message, is_edit=False):
     users = db.get_all_users()
     user_lang = db.get_user_info(message.from_user.id)
     context = f'{messages[user_lang[2]]["user_count"]}: {len(users)}\n\n' \
@@ -57,7 +57,11 @@ async def show_all_users_handler(message: types.Message):
     for n, user in enumerate(users, start=1):
         context += f"{n}) {user[1]}\n"
 
-    await message.answer(context)
+    btn = await show_users_btn(users)
+    if is_edit:
+        await message.edit_text(context, reply_markup=btn)
+    else:
+        await message.answer(context, reply_markup=btn)
 
 
 @dp.message_handler(text="Tilni o`zgartirish")
@@ -75,6 +79,31 @@ async def selected_uz_callback(callback: types.CallbackQuery):
     db.update_user_lang(user_id=user_id, lang=lang)
 
     await callback.answer(f"{messages[lang]['lang_changed']}", show_alert=True)
+
+
+@dp.callback_query_handler(text_contains='user:')
+async def get_user_info_callback(callback: types.CallbackQuery):
+    user_id = callback.data.split(':')[-1]
+    user = db.get_user_info(user_id)
+    context = f"{user[1]}\n" \
+              f"{user[0]}\n" \
+              f"{user[2]}"
+
+    btn = await user_info_btn(user_id)
+    await callback.message.edit_text(context, reply_markup=btn)
+
+
+@dp.callback_query_handler(text='back')
+async def back_callback(callback: types.CallbackQuery):
+    await show_all_users_handler(callback.message, is_edit=True)
+
+
+@dp.callback_query_handler(text_contains='delete:')
+async def delete_user_callback(callback: types.CallbackQuery):
+    user_id = callback.data.split(':')[-1]
+    db.delete_user(user_id)
+    await callback.answer(f"{user_id} deleted!")
+    await show_all_users_handler(callback.message, is_edit=True)
 
 
 if __name__ == '__main__':
