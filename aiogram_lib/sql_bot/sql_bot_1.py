@@ -50,7 +50,7 @@ async def send_welcome(message: types.Message):
 @dp.message_handler(commands=['users'])
 async def show_all_users_handler(message: types.Message, is_edit=False):
     users = db.get_all_users()
-    user_lang = db.get_user_info(message.from_user.id)
+    user_lang = db.get_user_info(message.chat.id)
     context = f'{messages[user_lang[2]]["user_count"]}: {len(users)}\n\n' \
               f'{messages[user_lang[2]]["users_list"]}:\n'
 
