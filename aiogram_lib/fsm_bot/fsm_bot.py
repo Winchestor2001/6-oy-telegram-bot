@@ -50,6 +50,7 @@ async def select_gander_state(callback: types.CallbackQuery, state: FSMContext):
     gander = callback.data.split(":")[-1]
     await state.update_data(gander=gander)
     btn = await send_phone_number_btn()
+    await callback.message.delete()
     await callback.message.answer("Telefon raqamni yuboring", reply_markup=btn)
     await MyStates.phone_number.set()
 
@@ -71,7 +72,7 @@ async def get_avatar_state(message: types.Message, state: FSMContext):
         img=pic_id
     )
     await message.answer("Siz ro`yxatdan o`tingiz!")
-    await state.finish()
+    await state.reset_state()
 
 
 if __name__ == '__main__':
