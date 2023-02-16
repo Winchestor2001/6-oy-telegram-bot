@@ -1,4 +1,7 @@
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButton, \
+    ReplyKeyboardRemove
+
+remove_btn = ReplyKeyboardRemove()
 
 
 async def gander_options_btn():
@@ -9,4 +12,11 @@ async def gander_options_btn():
     )
     return btn
 
+
+async def send_phone_number_btn():
+    btn = ReplyKeyboardMarkup(resize_keyboard=True)
+    btn.add(
+        KeyboardButton("Telefon raqam", request_contact=True)
+    )
+    return btn
 
