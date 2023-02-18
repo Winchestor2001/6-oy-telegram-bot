@@ -29,3 +29,7 @@ class MainDB:
             WHERE user_id = ?
             """, (data['ism'], data['gander'], data['phone'], img, user_id))
 
+    def get_user_info(self, user_id):
+        with self.con:
+            user = self.cur.execute("SELECT * FROM users WHERE user_id = ?", (user_id,)).fetchone()
+            return user

@@ -75,5 +75,20 @@ async def get_avatar_state(message: types.Message, state: FSMContext):
     await state.reset_state()
 
 
+@dp.message_handler(commands=['info'])
+async def bot_info_handler(message: types.Message):
+    user_id = message.from_user.id
+    user = db.get_user_info(user_id)
+    check_user_info = list(set(user))
+    if None in check_user_info or '' in check_user_info:
+        await message.answer("Siz xali r`oyxatdan o`tmadingiz")
+    else:
+        context = f"Malumotlar:\n\n" \
+                  f"Ism: {user[1]}\n" \
+                  f"Jinsi: {user[2]}\n" \
+                  f"Tel.raqam: {user[3]}"
+        await message.answer_photo(user[4], caption=context)
+
+
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
