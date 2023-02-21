@@ -24,4 +24,7 @@ class MainDB:
             if user is None:
                 self.cur.execute("INSERT INTO users (user_id, username) VALUES (?, ?)", (user_id, username))
 
-
+    def get_all_effects(self):
+        with self.con:
+            effects = self.cur.execute("SELECT effect_name FROM effects").fetchall()
+            return effects

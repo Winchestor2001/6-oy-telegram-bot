@@ -1,7 +1,7 @@
 from aiogram import Bot, Dispatcher, types, executor
 import logging
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from keyboards import menu_btn
+from keyboards import menu_btn, effects_btn
 from database import MainDB
 
 
@@ -24,6 +24,13 @@ async def bot_start_handler(message: types.Message):
 
     btn = await menu_btn()
     await message.answer("Assalomu aleykum", reply_markup=btn)
+
+
+@dp.message_handler(content_types=['text'], text='🖼 Rasimga Joziba berish')
+async def show_effects_handler(message: types.Message):
+    effects = db.get_all_effects()
+    btn = await effects_btn(effects)
+    await message.answer("Effectni tanlang:", reply_markup=btn)
 
 
 if __name__ == '__main__':
