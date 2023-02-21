@@ -28,3 +28,8 @@ class MainDB:
         with self.con:
             effects = self.cur.execute("SELECT effect_name FROM effects").fetchall()
             return effects
+
+    def get_effect(self, effect_name: str):
+        with self.con:
+            effect = self.cur.execute("SELECT effect FROM effects WHERE effect_name =?", (effect_name,)).fetchone()
+            return effect
