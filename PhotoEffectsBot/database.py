@@ -10,7 +10,7 @@ class MainDB:
         with self.con:
             self.cur.execute("""CREATE TABLE IF NOT EXISTS users(
                             user_id INT PRIMARY KEY,
-                            username VARCHAR(100),
+                            username VARCHAR(100)
                             )""")
 
             self.cur.execute("""CREATE TABLE IF NOT EXISTS effects(
