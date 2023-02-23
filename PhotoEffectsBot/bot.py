@@ -3,9 +3,11 @@ import logging
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 
+from PhotoEffectsBot.pillow_effect import make_filter_image
 from keyboards import menu_btn, effects_btn
 from database import MainDB
 from AllStates import UserStates
+import os
 
 
 logging.basicConfig(level=logging.INFO)
@@ -46,9 +48,13 @@ async def show_effects_handler(message: types.Message):
 async def get_user_photo_state(message: types.Message, state: FSMContext):
     file = await bot.get_file(message.photo[-1].file_id)
     file_type = file.file_path.split(".")[-1]
-    filename = f"images/old_{message.from_user.id}.{file_type}"
+    filename = f"images/{message.from_user.id}.{file_type}"
     await message.photo[-1].download(destination_file=filename)
-    print(await state.get_data())
+    effect = await state.get_data()
+    img = await make_filter_image(filename, effect['effect'])
+    await message.answer_photo(types.InputFile(img))
+    await state.finish()
+    os.unlink(img)
 
 
 @dp.message_handler(content_types=['text'])
