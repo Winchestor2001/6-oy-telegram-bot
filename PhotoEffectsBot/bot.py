@@ -5,6 +5,7 @@ from aiogram.dispatcher import FSMContext
 
 from keyboards import menu_btn, effects_btn
 from database import MainDB
+from AllStates import UserStates
 
 
 logging.basicConfig(level=logging.INFO)
@@ -41,6 +42,15 @@ async def show_effects_handler(message: types.Message):
     await message.answer("Effectni tanlang:", reply_markup=btn)
 
 
+@dp.message_handler(content_types=['photo'], state=UserStates.get_photo)
+async def get_user_photo_state(message: types.Message, state: FSMContext):
+    file = await bot.get_file(message.photo[-1].file_id)
+    file_type = file.file_path.split(".")[-1]
+    filename = f"images/old_{message.from_user.id}.{file_type}"
+    await message.photo[-1].download(destination_file=filename)
+    print(await state.get_data())
+
+
 @dp.message_handler(content_types=['text'])
 async def get_selected_effect_handler(message: types.Message, state: FSMContext):
     text = message.text
@@ -49,6 +59,8 @@ async def get_selected_effect_handler(message: types.Message, state: FSMContext)
     if effects:
         effect = db.get_effect(effects[0][0])
         await state.update_data(effect=effect[0])
+        await message.answer("Rasim yuboring:")
+        await UserStates.get_photo.set()
 
 
 if __name__ == '__main__':
