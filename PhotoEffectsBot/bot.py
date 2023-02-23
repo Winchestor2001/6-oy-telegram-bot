@@ -51,7 +51,8 @@ async def get_user_photo_state(message: types.Message, state: FSMContext):
     filename = f"images/{message.from_user.id}.{file_type}"
     await message.photo[-1].download(destination_file=filename)
     effect = await state.get_data()
-    img = await make_filter_image(filename, effect['effect'])
+    is_filter = False if effect['effect'] == 'L' else True
+    img = await make_filter_image(filename, effect['effect'], is_filter)
     await message.answer_photo(types.InputFile(img))
     await state.finish()
     os.unlink(img)
