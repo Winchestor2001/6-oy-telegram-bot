@@ -1,3 +1,4 @@
+import datetime
 import sqlite3 as sql
 
 
@@ -10,7 +11,8 @@ class MainDB:
         with self.con:
             self.cur.execute("""CREATE TABLE IF NOT EXISTS users(
                             user_id INT PRIMARY KEY,
-                            username VARCHAR(100)
+                            username VARCHAR(100),
+                            date VARCHAR(30)
                             )""")
 
             self.cur.execute("""CREATE TABLE IF NOT EXISTS effects(
@@ -19,10 +21,11 @@ class MainDB:
                             )""")
 
     def add_user(self, user_id: int, username: str):
+        today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
         with self.con:
             user = self.cur.execute("SELECT * FROM users WHERE user_id = ?", (user_id,)).fetchone()
             if user is None:
-                self.cur.execute("INSERT INTO users (user_id, username) VALUES (?, ?)", (user_id, username))
+                self.cur.execute("INSERT INTO users (user_id, username, date) VALUES (?, ?, ?)", (user_id, username, today))
 
     def get_all_effects(self):
         with self.con:
@@ -37,4 +40,21 @@ class MainDB:
     def count_all_users(self):
         with self.con:
             total_users = self.cur.execute("SELECT count(*) FROM users").fetchone()
-            return total_users
+            return total_users[0]
+
+    def count_users_date(self):
+        with self.con:
+            all_date = self.cur.execute("SELECT date FROM users").fetchall()
+            hours = 0
+            days = 0
+            for date in all_date:
+                now_date = datetime.datetime.now()
+                date = datetime.datetime.strptime(date[0], "%Y-%m-%d %H:%M")
+                now_time = datetime.datetime.now().strftime("%H")
+                user_time = date.strftime("%H")
+                date3_days = now_date - datetime.timedelta(days=3)
+                if date > date3_days:
+                    days += 1
+                    if now_time == user_time:
+                        hours += 1
+            return days, hours

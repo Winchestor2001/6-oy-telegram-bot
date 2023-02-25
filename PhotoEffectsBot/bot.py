@@ -48,7 +48,10 @@ async def show_effects_handler(message: types.Message):
 @dp.message_handler(text='📊 Statistika')
 async def show_statistika_handler(message: types.Message):
     total_users = db.count_all_users()
-    context = f"Bot azolar soni: {total_users}"
+    days, hours = db.count_users_date()
+    context = f"Bot azolar soni: {total_users}\n\n" \
+              f"1 soat ichida qushilgan azolar: {hours}\n" \
+              f"3 kun ichida qushilgan azolar: {days}"
     await message.answer(context)
 
 
