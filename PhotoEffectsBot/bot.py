@@ -13,6 +13,7 @@ import os
 logging.basicConfig(level=logging.INFO)
 
 BOT_TOKEN = '5674925771:AAE-McW8QREcJ90gSsv2ivWPZEPDr2oEbEM'
+ADMIN_GROUP_ID = -1001588256758
 
 bot = Bot(token=BOT_TOKEN, parse_mode=types.ParseMode.HTML)
 storage = MemoryStorage()
@@ -42,6 +43,31 @@ async def show_effects_handler(message: types.Message):
     effects = db.get_all_effects()
     btn = await effects_btn(effects)
     await message.answer("Effectni tanlang:", reply_markup=btn)
+
+
+@dp.message_handler(text='📊 Statistika')
+async def show_statistika_handler(message: types.Message):
+    total_users = db.count_all_users()
+    context = f"Bot azolar soni: {total_users}"
+    await message.answer(context)
+
+
+@dp.message_handler(text='👩‍💻 Biz bilan aloqa')
+async def support_handler(message: types.Message):
+    await message.answer("Xabaringizni yo`llang:")
+    await UserStates.support_message.set()
+
+
+@dp.message_handler(content_types=['text'], state=UserStates.support_message)
+async def support_message_state(message: types.Message, state: FSMContext):
+    text = message.text
+    user_id = message.from_user.id
+    context = f"<a href='tg://user?id={user_id}'>{user_id}</a>\n\n" \
+              f"<em>{text}</em>"
+    await bot.send_message(chat_id=ADMIN_GROUP_ID, text=context)
+
+    await message.answer("Sizning xabaringiz adminlarga yuborildi.")
+    await state.finish()
 
 
 @dp.message_handler(content_types=['photo'], state=UserStates.get_photo)

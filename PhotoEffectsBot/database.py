@@ -33,3 +33,8 @@ class MainDB:
         with self.con:
             effect = self.cur.execute("SELECT effect FROM effects WHERE effect_name =?", (effect_name,)).fetchone()
             return effect
+
+    def count_all_users(self):
+        with self.con:
+            total_users = self.cur.execute("SELECT count(*) FROM users").fetchone()
+            return total_users
