@@ -19,3 +19,9 @@ async def effects_btn(data):
     )
 
     return btn
+
+
+async def cancel_support_btn():
+    btn = ReplyKeyboardMarkup(resize_keyboard=True)
+    btn.row("❌ Bekor qilish")
+    return btn

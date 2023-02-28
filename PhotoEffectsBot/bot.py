@@ -4,7 +4,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 
 from PhotoEffectsBot.pillow_effect import make_filter_image
-from keyboards import menu_btn, effects_btn
+from keyboards import menu_btn, effects_btn, cancel_support_btn
 from database import MainDB
 from AllStates import UserStates
 import os
@@ -57,7 +57,8 @@ async def show_statistika_handler(message: types.Message):
 
 @dp.message_handler(text='👩‍💻 Biz bilan aloqa')
 async def support_handler(message: types.Message):
-    await message.answer("Xabaringizni yo`llang:")
+    btn = await cancel_support_btn()
+    await message.answer("Xabaringizni yo`llang:", reply_markup=btn)
     await UserStates.support_message.set()
 
 
@@ -65,11 +66,16 @@ async def support_handler(message: types.Message):
 async def support_message_state(message: types.Message, state: FSMContext):
     text = message.text
     user_id = message.from_user.id
-    context = f"<a href='tg://user?id={user_id}'>{user_id}</a>\n\n" \
-              f"<em>{text}</em>"
-    await bot.send_message(chat_id=ADMIN_GROUP_ID, text=context)
+    if text == '❌ Bekor qilish':
+        btn = await menu_btn()
+        await message.answer("Bosh menu", reply_markup=btn)
+    else:
+        context = f"<a href='tg://user?id={user_id}'>{user_id}</a>\n\n" \
+                  f"<em>{text}</em>"
+        await bot.send_message(chat_id=ADMIN_GROUP_ID, text=context)
 
-    await message.answer("Sizning xabaringiz adminlarga yuborildi.")
+        await message.answer("Sizning xabaringiz adminlarga yuborildi.")
+
     await state.finish()
 
 
